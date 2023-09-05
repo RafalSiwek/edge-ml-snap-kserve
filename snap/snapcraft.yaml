@@ -1,0 +1,37 @@
+name: wine-rater
+base: core22
+version: "0.0.2"
+summary: Inference carrier of sklearn container
+description: |
+  This snap deliveres a KServe-compatible sklearn model inference container.
+  Once installed or refreshed it pushes the inference container into a configured image registry avalable on localhost:32000
+
+grade: stable
+confinement: strict
+
+architectures:
+  - build-on: arm64
+    build-for: amd64
+  - build-on: arm64
+    build-for: arm64
+
+environment:
+  REGISTRY_HOST: localhost:32000
+
+parts:
+  crane:
+    plugin: dump
+    source:
+      - to arm64: "https://github.com/google/go-containerregistry/releases/download/v0.16.1/go-containerregistry_Linux_arm64.tar.gz"
+      - to amd64: "https://github.com/google/go-containerregistry/releases/download/v0.16.1/go-containerregistry_Linux_x86_64.tar.gz"
+    organize:
+      crane: usr/bin/
+
+  copy-script:
+    plugin: dump
+    source: ./images
+    stage:
+      - kserve-wine-rater-${SNAPCRAFT_TARGET_ARCH}.latest.tgz
+
+plugs:
+  network:

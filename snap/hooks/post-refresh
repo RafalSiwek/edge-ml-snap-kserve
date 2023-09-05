@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+crane push $SNAP/kserve-wine-rater-$SNAP_ARCH.latest.tgz $REGISTRY_HOST/kserve-wine-rater:$SNAP_VERSION --insecure
